@@ -1,0 +1,16 @@
+<!-- auto/templates/auto/index.html -->
+
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Posts</h1>
+  <a href="{% url 'add_post' %}">Add New Post</a>
+  <ul>
+    {% for post in posts %}
+      <li>
+        <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a> by {{ post.author }}
+        ({{ post.likes.count }} likes)
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

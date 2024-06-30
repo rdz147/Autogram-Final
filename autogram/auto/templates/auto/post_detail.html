@@ -1,0 +1,23 @@
+<!-- auto/templates/auto/post_detail.html -->
+
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>{{ post.title }}</h1>
+  <p>{{ post.content }}</p>
+  <p>by {{ post.author }}</p>
+  <p>{{ post.likes.count }} likes</p>
+  <a href="{% url 'like_post' post.pk %}">Like</a>
+  <h2>Comments</h2>
+  <ul>
+    {% for comment in post.comments.all %}
+      <li>{{ comment.author }}: {{ comment.content }}</li>
+    {% endfor %}
+  </ul>
+  <h2>Add a comment</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add comment</button>
+  </form>
+{% endblock %}
