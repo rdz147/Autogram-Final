@@ -1,24 +1,23 @@
-<!-- auto/templates/base_generic.html -->
+<!-- templates/base_generic.html -->
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Meu Projeto</title>
+    <title>My Auto Social Network</title>
 </head>
 <body>
-  <header>
-    <nav>
-      <ul>
-        <li><a href="{% url 'index' %}">Home</a></li>
-        <li><a href="{% url 'signup' %}">Sign Up</a></li>  <!-- Link para a página de registro -->
-      </ul>
-    </nav>
-  </header>
-  
-  <main>
-    {% block content %}
-    {% endblock %}
-  </main>
+    <header>
+        <h1>My Auto Social Network</h1>
+        <nav>
+            <a href="{% url 'index' %}">Home</a>
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'logout' %}">Logout</a>
+            <a href="{% url 'signup' %}">Sign Up</a>
+        </nav>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
 </body>
 </html>

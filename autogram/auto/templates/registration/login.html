@@ -65,7 +65,7 @@
         }
 
         form {
-            height: 400px;
+            height: 450px;
             width: 400px;
             background-color: rgba(255, 255, 255, 0.13);
             position: absolute;
@@ -155,15 +155,20 @@
         <div class="bola"></div>
         <div class="bola"></div>
     </div>
-
-    <form method="post">
+  
+    <form method="post" action="{% url 'login' %}">
         {% csrf_token %}
         <h1>Login</h1>
+        {% if error %}
+            <p style="color: red; text-align: center;">{{ error }}</p>
+        {% endif %}
         <label for="id_username">Username</label>
-        <input type="text" name="username" id="id_username" placeholder="Username">
+        <input type="text" name="username" id="id_username" placeholder="Username" required>
         <label for="id_password">Password</label>
-        <input type="password" name="password" id="id_password" placeholder="Password">
+        <input type="password" name="password" id="id_password" placeholder="Password" required>
         <button type="submit">Login</button>
+        <br>
+        <p>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
     </form>
-</body>
-</html>
+  </body>
+  </html>
