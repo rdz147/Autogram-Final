@@ -1,9 +1,11 @@
+<!-- auto/templates/auto/login.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
+    <title>Login</title>
     <style>
         html {
             scroll-behavior: smooth;
@@ -29,7 +31,7 @@
 
         .background {
             width: 430px;
-            height: 600px; /* Adjusted height */
+            height: 520px;
             position: absolute;
             transform: translate(-50%, -50%);
             left: 50%;
@@ -63,7 +65,7 @@
         }
 
         form {
-            height: 900px; /* Adjusted height */
+            height: 450px;
             width: 400px;
             background-color: rgba(255, 255, 255, 0.13);
             position: absolute;
@@ -149,31 +151,24 @@
     </style>
 </head>
 <body>
-    <div class="background">
-        <div class="bola"></div>
-        <div class="bola"></div>
-    </div>
+  <div class="background">
+      <div class="bola"></div>
+      <div class="bola"></div>
+  </div>
 
-    <form method="post" action="{% url 'signup' %}">
-        {% csrf_token %}
-        <h1>Sign Up</h1>
-        <label for="id_username">Username</label>
-        {{ form.username }}
-        <label for="id_first_name">First Name</label>
-        {{ form.first_name }}
-        <label for="id_last_name">Last Name</label>
-        {{ form.last_name }}
-        <label for="id_birth_date">Birth Date (YYYY-MM-DD)</label>
-        {{ form.birth_date }}
-        <label for="id_email">Email</label>
-        {{ form.email }}
-        <label for="id_password1">Password</label>
-        {{ form.password1 }}
-        <label for="id_password2">Confirm Password</label>
-        {{ form.password2 }}
-        <button type="submit">Sign Up</button>
-        <br>
-        <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
-    </form>
+  <form method="post">
+      {% csrf_token %}
+      <h1>Login</h1>
+      {% if error %}
+          <p style="color: red; text-align: center;">{{ error }}</p>
+      {% endif %}
+      <label for="id_username">Username</label>
+      <input type="text" name="username" id="id_username" placeholder="Username" required>
+      <label for="id_password">Password</label>
+      <input type="password" name="password" id="id_password" placeholder="Password" required>
+      <button type="submit">Login</button>
+      <br>
+      <p>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
+  </form>
 </body>
 </html>

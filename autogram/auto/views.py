@@ -1,40 +1,33 @@
 # auto/views.py
 
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Post, Comment, Like
+from django.views.generic import ListView, DetailView
+from .models import Post
 from .forms import PostForm, CommentForm
-from .forms import SignUpForm
-from django.contrib.auth.forms import AuthenticationForm
 
-def index(request):
-    posts = Post.objects.all()
-    return render(request, 'auto/index.html', {'posts': posts})
+def index_view(request):
+    return render(request, 'auto/index.html')
 
-@login_required
-def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    if request.method == "POST":
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = post
-            comment.author = request.user
-            comment.save()
-            return redirect('post_detail', pk=post.pk)
-    else:
-        form = CommentForm()
-    return render(request, 'auto/post_detail.html', {'post': post, 'form': form})
+class FeedView(ListView):
+    model = Post
+    template_name = 'auto/feed.html'
+    context_object_name = 'posts'
+    ordering = ['-created_at']
+
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'auto/post_detail.html'
 
 @login_required
 def add_post(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
             post.save()
-            return redirect('post_detail', pk=post.pk)
+            return redirect('feed')
     else:
         form = PostForm()
     return render(request, 'auto/add_post.html', {'form': form})
@@ -42,26 +35,28 @@ def add_post(request):
 @login_required
 def like_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    like, created = Like.objects.get_or_create(post=post, user=request.user)
-    if not created:
-        like.delete()
-    return redirect('post_detail', pk=post.pk)
-
-def signup(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('index')  # Redireciona para a página inicial após o registro
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
     else:
-        form = SignUpForm()
-    return render(request, 'auto/signup.html', {'form': form})
+        post.likes.add(request.user)
+    return redirect('post_detail', pk=pk)
 
-def login(request):
+@login_required
+def add_comment(request, pk):
+    post = get_object_or_404(Post, pk=pk)
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
+        form = CommentForm(request.POST)
         if form.is_valid():
-            return redirect('index')  # Redireciona para a página inicial após o login
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            return redirect('post_detail', pk=pk)
     else:
-        form = AuthenticationForm()
-    return render(request, 'auto/login.html', {'form': form})
+        form = CommentForm()
+    return render(request, 'auto/post_detail.html', {'form': form, 'post': post})
+
+@login_required
+def feed_view(request):
+    posts = Post.objects.all()
+    return render(request, 'auto/feed.html', {'posts': posts})
