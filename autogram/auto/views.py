@@ -20,7 +20,7 @@ class PostDetailView(DetailView):
     template_name = 'auto/post_detail.html'
 
 @login_required
-def add_post(request):
+def add_post_view(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
