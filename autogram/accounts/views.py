@@ -1,5 +1,3 @@
-# accounts/views.py
-
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -8,6 +6,7 @@ from .forms import CustomUserCreationForm, CustomAuthenticationForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.views import LoginView
+import logging
 
 def signup_view(request):
     if request.method == 'POST':
@@ -28,7 +27,7 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('feed')  # Redireciona para a página de feed após o login
+                return redirect('feed')
             else:
                 return render(request, 'registration/login.html', {'form': form, 'error': 'Invalid username or password'})
         else:
@@ -40,7 +39,16 @@ def login_view(request):
 @login_required
 def logout_view(request):
     logout(request)
-    return render(request, 'registration/logged_out.html')
+    print("Usuário deslogado")
+    return redirect('index')
+
+'''logger = logging.getLogger(__name__)
+
+def custom_logout_view(request):
+    logger.debug("Iniciando processo de logout")
+    logout(request)
+    logger.debug("Usuário deslogado")
+    return redirect('/')'''
 
 def signup(request):
     if request.method == 'POST':
@@ -48,7 +56,7 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             auth_login(request, user)
-            return redirect('index')  # redireciona para a página inicial após o cadastro
+            return redirect('index')
     else:
         form = UserCreationForm()
     return render(request, 'accounts/signup.html', {'form': form})

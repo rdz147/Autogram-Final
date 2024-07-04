@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import FeedView, PostDetailView, like_post, add_comment
-from accounts.views import login_view as user_login  # Corrigido para importar de accounts.views
+#from accounts.views import login_view as user_login 
 from . import views
 from accounts.views import signup_view
 from .views import index_view, feed_view, add_post_view
